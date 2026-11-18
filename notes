@@ -1,0 +1,64 @@
+1. Clean up Access after centralizing Kafka producer configuration in Common
+   Description
+   Remove obsolete Kafka configuration and unused code from Access following the migration to Common.
+
+Tasks
+- Remove unused classes, imports, dependencies and properties.
+- Update related tests and documentation.
+- Keep Access-specific notification publishing logic.
+  Acceptance criteria
+  Access uses Common’s producer configuration, builds successfully and publishes notifications without regression.
+2. Fix the Country column in the Admin SPA use-case table
+   Description
+   The Country column currently displays the language instead of the country.
+
+Tasks
+- Check the API response mapping and table binding.
+- Display the country in the Country column and the language in the Language column.
+  Acceptance criteria
+  Both columns display the correct values for existing and newly created use cases.
+3. Configure Dispatcher Kafka connectivity and request network access
+   Description
+   Prepare Dispatcher’s Kafka consumer and producer configuration, following the setup used for Access.
+
+Tasks
+- Configure bootstrap servers, input/output topics, consumer group and SSL credentials.
+- Confirm the broker endpoints advertised in Kafka metadata.
+- Request network access from Dispatcher pods to all required broker endpoints.
+- Verify TLS connectivity, event consumption and notification publishing.
+  Acceptance criteria
+  Dispatcher consumes Access events and publishes Kafka notifications without connectivity, authentication or authorization errors.
+4. Investigate Avro decoding in AKHQ
+   Description
+   Events published by Access appear as bytes in AKHQ instead of readable structured data.
+
+Tasks
+- Verify the serialization format used by Access.
+- Check AKHQ’s Avro deserialization configuration and topic-to-schema mapping.
+- Ensure AKHQ uses the matching schema from Common.
+- Configure decoding without Schema Registry, which is currently disabled.
+  Acceptance criteria
+  AKHQ displays Access events as readable structured JSON, including data and metadata, without changing the event contract.
+
+1. Fix WALLE_EUDI request endpoint in the flow without Camunda
+   Description
+   When using WALLE_EUDI without Camunda, the wallet calls /request/withouth-camunda/... and receives a 404 Not Found, preventing the identification flow from continuing.
+
+Tasks
+- Check the generated request URL against the controller mapping, including withouth-camunda versus without-camunda.
+- Verify the endpoint is exposed correctly through the gateway.
+- Correct the URL or routing and test the flow.
+  Acceptance criteria
+  The wallet can retrieve the request JWT and complete the identification flow without Camunda.
+2. Generate dedicated DEV Kafka certificates using Horizon CLI
+   Description
+   Our project currently uses Kafka certificates belonging to the OBI project. Generate dedicated certificates for our services using Horizon CLI, with automated certificate lifecycle management and expiry notifications.
+
+Tasks
+- Confirm the required client/server certificate profiles with the Kafka team.
+- Generate the project-specific DEV certificates through Horizon CLI.
+- Prepare the required keystore and truststore, and securely store their passwords.
+- Update the service configuration to replace the OBI certificates.
+- Configure expiry notifications and document the renewal procedure.
+  Acceptance criteria
+  Our services connect to DEV Kafka using dedicated certificates, without relying on OBI certificates. Certificate expiry notifications and the renewal procedure are configured and documented
